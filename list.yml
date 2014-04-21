@@ -1,0 +1,27 @@
+default:
+    Title: "Homework"
+    headerX: ""
+    headerY: "CS224S Course Assignment"
+    inputLineStretch: 1
+    inputParSkip: 0.3em
+    # inputParIndent: 15pt
+    # parskip: "0.5em"
+    inputAuthors: Zifei Shan
+    myid: "zifei@stanford.edu"
+    # dept: "Computer Science"
+    topspace: 10mm
+    bottomspace: 13mm
+    # computer: computer
+    # pkulogo: "\\includegraphics[height=8mm]{img/pku_logo.eps}"
+    pkulogo: ""
+    geometryline: "\\geometry{margin=1in,columnsep=0.25in,includeheadfoot}"
+    coverpage: ""
+
+hw1:
+    Title: "Homework 1"
+hw3:
+    Title: "Homework 3"
+    myid: "\\{zifei, tianxin, caohw\\}@stanford.edu"
+    inputAuthors: "Zifei Shan, Tianxin Zhao, Haowen Cao"
+    headerY: ""
+    headerX: "CS224S Course Assignment"
