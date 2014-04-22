@@ -72,6 +72,48 @@ Starter             3              YES             3.27            9.29
 Starter             4              NO              3.17            8.97
 Starter             4              YES             2.59            7.33
 
+<!-- 
+\begin{longtable}[c]{@{}lclll@{}}
+\toprule\addlinespace
+Parameter & DATA & Normalize & WER(\%) & SER(\%)
+\\\addlinespace
+\midrule\endhead
+Tuned & 1 & NO & 10.22 & 19.76
+\\\addlinespace
+Tuned & 1 & YES & 7.44 & 15.63
+\\\addlinespace
+Tuned & 2 & NO & 7.05 & 14.9
+\\\addlinespace
+Tuned & 2 & YES & 5.77 & 12.57
+\\\addlinespace
+Tuned & 3 & NO & 1.71 & 5.02
+\\\addlinespace
+Tuned & 3 & YES & 1.12 & 3.39
+\\\addlinespace
+Tuned & 4 & NO & 1.2 & 3.49
+\\\addlinespace
+Tuned & 4 & YES & 0.97 & 2.89
+\\\addlinespace
+Starter & 1 & NO & 12.32 & 24.41
+\\\addlinespace
+Starter & 1 & YES & 10.13 & 21.43
+\\\addlinespace
+Starter & 2 & NO & 9.06 & 20.41
+\\\addlinespace
+Starter & 2 & YES & 7.7 & 17.59
+\\\addlinespace
+Starter & 3 & NO & 3.97 & 11.31
+\\\addlinespace
+Starter & 3 & YES & 3.27 & 9.29
+\\\addlinespace
+Starter & 4 & NO & 3.17 & 8.97
+\\\addlinespace
+Starter & 4 & YES & 2.59 & 7.33
+\\\addlinespace
+\bottomrule
+\end{longtable}
+-->
+
 Finding:
 
 - Dataset 3 (reduced dataset of both men and women voice) achieves similar results with the full dataset, while training with only men / women voice has much worse performance.
@@ -93,38 +135,40 @@ delta     numleaves    totgauss        WER(%)        SER(%)
 ------    -----------  -------------  -----------   --------------
 BEFORE          10          500          0.97          2.89
 AFTER           100         800        **0.79**      **2.41**
+AFTER           200         1200          0.84          2.48
 AFTER           300         1200          0.98          2.86
 AFTER           500         1200          1.02          2.83
 AFTER           500         800          1.21          3.48
 AFTER           800         800          1.22          3.41
 AFTER           10         800          1.97          5.99
 AFTER           100         100          1.98          5.75
+
+<!-- 
 AFTER           16         800          2.07          6.26
 AFTER           10         500          2.27          6.83
 AFTER           16         100          3.33          9.76
+ -->
 
 # Extra credit
 
 ## Combinations of monotone and delta training
 
 For extra credit, we also tried delta training for the parameter optimized for Question 1 \ref{sec:mono} (Alternative parameters)
-*20,18,100,1,1 1 2 3 4 5 6 7 8 9 10 13 16 19', normalized, trained on dataset 4*, and starter parameters.
+*20,18,100,1,1 1 2 3 4 5 6 7 8 9 10 13 16 19', normalized, trained on dataset 4*.
 
 The results are reported in following table:
-
-Alternative parameters:
 
 delta     numleaves    totgauss        WER(%)        SER(%)
 ------    -----------  -------------  -----------   --------------
 BEFORE          /          /             1.57          4.59
 AFTER          200          300         1.40          4.17
 AFTER          100          300         1.34          4.05
-AFTER          100          800         1.01          3.05
+AFTER          100          800        *1.01*        *3.05*
 AFTER          200          800         0.96          2.84
 AFTER          100          1200         0.90          2.75
-AFTER          200          1200         0.80          2.44
+AFTER          200          1200       **0.80**        **2.44**
 
-
+<!-- 
 Starter parameters:
 
 delta     numleaves    totgauss        WER(%)        SER(%)
@@ -135,9 +179,11 @@ AFTER          300          1200          7.47          16.22
 AFTER          500          1200          8.27          17.33
 AFTER          500          800          7.84          16.66
 AFTER          800          1200          8.76          18.16
-AFTER          800          800          7.64          16.7
+AFTER          800          800          7.64          16.7 
+-->
 
-We see none of those training get better numbers than our optimal number (0.79%, 2.41%).
+We see none of those training get better numbers than our optimal number (0.79%, 2.41%). 
+Interestingly, (200,1200) works better for alternative parameters, but (100,800) works better for our best parameters.
 
 
 ## Training with energy
