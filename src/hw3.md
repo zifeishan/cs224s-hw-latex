@@ -5,8 +5,17 @@
 - Haowen Cao (caohw@stanford.edu)
  -->
 
-# (1) Improve the monophone acoustic model
+ In this homework, we worked on Kaldi to tune parameters of a monophone acoustic model.
+
+# Improve the monophone acoustic model
 \label{sec:mono}
+In this section, we tune 5 parameters: num_iters, max_iter_inc, totgauss, boost_silence and realign_iters. Num_iters refers to the number of Baum-Welch training the system does. The system will converges to a local optimum after certain number of iterations. We pick num_iters mainly by trial and error (50). 
+
+Max_iter_inc is the number of last iteration to increase Gaussian and totgauss is the maximum number of Gaussian that we will use. In order to pick the best number of Gaussians to model each observation distribution, we increase the number of Gaussian once in a while. By querying to the system using gmm-info, we can see the system is using an initial #Gaussian of 62. Our choice of max_iter_inc and totgauss will decide when we will increase the Gaussians. We pick up this value by testing different combinations and decide to use a big number of totgauss (500) so that it has a large range to pick. The max_iter_inc we pick is by testing some possible values and it turns out when it is equal to num_iters (500), the system gets a lowest WER and SER. The reason of this we can think is that it will make the increase of #Gaussian slower so that the system can test on more values and keep the one that maximize the overall likelihood. 
+
+We pick boost_silence basically by testing. Since the training/testing data is human speaker, it has some extent of silence. We increase the boost_silence to 1.2. 
+
+Lastly, the system is doing force alignment during training to provide the inner EM a better initialization for expectation step. The inner EM of our system basically dealing with tuning the mean and variance of all the Gaussians we use, and since we change the GMM model once in a while, the inner EM restarts, which requires a good initialization. We accomplished this by forced alignment. The realign iterations should have close relation with the step size that we increase #Gaussian. We calculated the step size, which is 8, and decide we need to realign the model every 8 iterations or less. By testing, we pick 3 which gives us a good result.
 
 We conducted a detailed experiment \ref{sec:exp} to tune parameters jointly, optimized for full datasets and normalization.
 
@@ -31,7 +40,7 @@ than the second parameter set:
 
 Therefore we conclude: parameters trained on the small dataset without normalization is not optimal. We should use the parameters obtained in Section \ref{sec:finalparam}.
 
-# (2) Improve feature extraction
+# Improve feature extraction
 
 We use the parameters in Section \ref{sec:finalparam}, and add normalization to feature extraction, and compare the results in following table, where we observe that feature normalization gives 27% WER reduction and 21% SER reduction:
 
@@ -40,9 +49,11 @@ We use the parameters in Section \ref{sec:finalparam}, and add normalization to 
 50             50             500             1.2             X2             1                NO       10.22             19.76 
 50             50             500             1.2             X2             1                YES      7.44              15.63
 
+We now use cepstrual mean and variance of one speaker to perform the feature normalization. CMVN is performed to remove the difference of training and testing environment. We compared the result of using normalization on different datasets and of different parameters, all turned out that normalization provides better result.
 
-# (3) Try different training data
+# Try different training data
 
+We now have a system of WER 7.44, which leads to a 30% correct system on 16 digits bank card. We than expand our training sets.
 
 We tried all combinations of:
 
@@ -121,8 +132,10 @@ Finding:
 - On average, Normalization achieves 20.96% WER reduction.
 - Our parameter achieves 62.54% WER reduction (from 2.59% to 0.97%) to the optimal training with starter parameters.
 
-# (4) Adding extra training steps
+# Adding extra training steps
 \label{sec:delta}
+
+Our original system use 12 dimensional MFCC features (energy feature is turned off). Now we consider the slope of the features and carry the train_deltas experiment. We train this model after train_mono so that we have a good initialization of EM.
 
 By adding extra training steps, we boost WER to 0.79% and SER to 2.41%, with `numleavs=100` and `totgauss=800`.
 
@@ -148,6 +161,28 @@ AFTER           16         800          2.07          6.26
 AFTER           10         500          2.27          6.83
 AFTER           16         100          3.33          9.76
  -->
+
+Adding delta features will not always improve the result based on different training set we pick. For small training set, more features may lead to overfitting and thus a worse result. 
+
+Below is a comparison between transcribed file with and without delta training.
+
+No Delta:
+
+ac_33o31a  [ 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 16 15 18 17 ] [ 122 121 121 121 124 123 123 126 125 125 ] [ 104 103 106 105 108 107 ] [ 62 61 64 66 65 65 ] [ 122 121 121 121 121 121 121 121 124 123 123 123 126 125 125 ] [ 104 106 105 108 107 ] [ 62 61 61 61 61 64 63 66 65 65 ] [ 86 85 85 85 85 85 85 85 85 85 85 85 85 85 88 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 90 89 89 89 89 89 89 89 89 ] [ 4 14 15 15 11 10 10 10 10 10 10 10 10 16 15 15 15 15 15 15 15 15 15 15 18 ] [ 122 121 121 121 124 123 123 123 123 126 125 125 125 ] [ 104 106 108 107 ] [ 62 61 61 64 66 65 65 65 ] [ 50 49 49 49 49 49 49 49 49 52 51 51 51 54 53 53 53 53 53 53 53 53 53 53 ] [ 80 79 79 82 81 81 81 81 84 83 83 ] [ 74 73 73 76 75 75 78 77 77 77 ] [ 4 1 1 1 16 18 17 17 17 17 17 17 17 17 17 17 17 17 17 ] 
+
+ac_33o31a  sil                                             th                                          r                           iy                    th                                                              r                       iy                                ow                                                                                                                                sil                                                                           th                                                      r                   iy                          w                                                                           ah                                   n                                 sil                          
+
+33031
+
+Has Delta:
+
+ac_33o31a  [ 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 16 18 ] [ 122 121 121 121 121 121 121 124 126 ] [ 104 106 108 107 ] [ 62 61 61 61 61 61 61 64 66 ] [ 4 1 1 16 18 ] [ 122 121 121 121 121 121 121 124 126 ] [ 104 106 108 ] [ 62 61 61 61 61 61 61 61 61 61 64 66 ] [ 86 88 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 90 ] [ 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 16 18 ] [ 122 121 121 121 121 121 121 121 121 121 124 126 ] [ 104 106 108 ] [ 62 61 61 61 61 61 61 61 64 66 ] [ 50 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 52 54 ] [ 80 82 81 81 81 81 81 81 81 81 84 ] [ 74 73 73 73 73 73 76 78 ] [ 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 16 18 ] 
+
+ac_33o31a  sil                                           th                                      r                   iy                             sil             th                                      r               iy                                      ow                                                                                                                             sil                                                         th                                                  r               iy                                w                                                                        ah                                   n                           sil   
+
+33031
+
+Both with or without delta interpret this stream as the same digit string "33031", but we can see that delta detected another SIL which is possibly due to its sensitivity to the slope of feature.
 
 # Extra credit
 
