@@ -17,7 +17,7 @@ We pick boost_silence basically by testing. Since the training/testing data is h
 
 Lastly, the system is doing force alignment during training to provide the inner EM a better initialization for expectation step. The inner EM of our system basically dealing with tuning the mean and variance of all the Gaussians we use, and since we change the GMM model once in a while, the inner EM restarts, which requires a good initialization. We accomplished this by forced alignment. The realign iterations should have close relation with the step size that we increase #Gaussian. We calculated the step size, which is 8, and decide we need to realign the model every 8 iterations or less. By testing, we pick 3 which gives us a good result.
 
-We conducted a detailed experiment \ref{sec:exp} to tune parameters jointly, optimized for full datasets and normalization.
+We conducted a detailed experiment in **Appendix** to tune parameters jointly, optimized for full datasets and normalization.
 
 We tried training different parameters in *only* this step (without normalization and all datasets), as row 1;
 We also shows our jointly optimized parameters in row 2:
@@ -63,6 +63,7 @@ We tried all combinations of:
 
 Results are listed in the following table:
 
+\small
 
 Parameter          DATA         Normalize       WER(%)            SER(%)      
 ----------       ---------      ----------      ---------         ----------   
@@ -83,6 +84,7 @@ Starter             3              YES             3.27            9.29
 Starter             4              NO              3.17            8.97
 Starter             4              YES             2.59            7.33
 
+\normalsize
 <!-- 
 \begin{longtable}[c]{@{}lclll@{}}
 \toprule\addlinespace
@@ -144,9 +146,12 @@ We tune `numleaves` and `totgauss` based on a random sampling from parameter spa
 - We found that extra training with a delta feature do not always improve WER / SER. In fact, improper values of "numleaves" (initial numbers of gaussians) and "totgauss" (maximum gaussians) would even increase errors. (e.g. numleaves=10, totgauss=500, WER increase from 0.97 to 2.27)
 - When numleaves=100, totgauss=800, errors are decreased by 18.5% (WER) / 16.6% (SER).
 
+
+\small
+
 delta     numleaves    totgauss        WER(%)        SER(%)
 ------    -----------  -------------  -----------   --------------
-BEFORE          10          500          0.97          2.89
+BEFORE          /         /              0.97          2.89
 AFTER           100         800        **0.79**      **2.41**
 AFTER           200         1200          0.84          2.48
 AFTER           300         1200          0.98          2.86
@@ -162,23 +167,32 @@ AFTER           10         500          2.27          6.83
 AFTER           16         100          3.33          9.76
  -->
 
+ \normalsize
+
 Adding delta features will not always improve the result based on different training set we pick. For small training set, more features may lead to overfitting and thus a worse result. 
 
 Below is a comparison between transcribed file with and without delta training.
 
-No Delta:
+**No Delta:**
 
+
+\tiny 
 ac_33o31a  [ 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 16 15 18 17 ] [ 122 121 121 121 124 123 123 126 125 125 ] [ 104 103 106 105 108 107 ] [ 62 61 64 66 65 65 ] [ 122 121 121 121 121 121 121 121 124 123 123 123 126 125 125 ] [ 104 106 105 108 107 ] [ 62 61 61 61 61 64 63 66 65 65 ] [ 86 85 85 85 85 85 85 85 85 85 85 85 85 85 88 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 90 89 89 89 89 89 89 89 89 ] [ 4 14 15 15 11 10 10 10 10 10 10 10 10 16 15 15 15 15 15 15 15 15 15 15 18 ] [ 122 121 121 121 124 123 123 123 123 126 125 125 125 ] [ 104 106 108 107 ] [ 62 61 61 64 66 65 65 65 ] [ 50 49 49 49 49 49 49 49 49 52 51 51 51 54 53 53 53 53 53 53 53 53 53 53 ] [ 80 79 79 82 81 81 81 81 84 83 83 ] [ 74 73 73 76 75 75 78 77 77 77 ] [ 4 1 1 1 16 18 17 17 17 17 17 17 17 17 17 17 17 17 17 ] 
 
-ac_33o31a  sil                                             th                                          r                           iy                    th                                                              r                       iy                                ow                                                                                                                                sil                                                                           th                                                      r                   iy                          w                                                                           ah                                   n                                 sil                          
+\normalsize
+
+*ac_33o31a*  sil                                             th                                          r                           iy                    th                                                              r                       iy                                ow                                                                                                                                sil                                                                           th                                                      r                   iy                          w                                                                           ah                                   n                                 sil                          
 
 33031
 
-Has Delta:
+**Has Delta:**
 
+\tiny 
 ac_33o31a  [ 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 16 18 ] [ 122 121 121 121 121 121 121 124 126 ] [ 104 106 108 107 ] [ 62 61 61 61 61 61 61 64 66 ] [ 4 1 1 16 18 ] [ 122 121 121 121 121 121 121 124 126 ] [ 104 106 108 ] [ 62 61 61 61 61 61 61 61 61 61 64 66 ] [ 86 88 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 87 90 ] [ 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 16 18 ] [ 122 121 121 121 121 121 121 121 121 121 124 126 ] [ 104 106 108 ] [ 62 61 61 61 61 61 61 61 64 66 ] [ 50 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 52 54 ] [ 80 82 81 81 81 81 81 81 81 81 84 ] [ 74 73 73 73 73 73 76 78 ] [ 4 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 16 18 ] 
 
-ac_33o31a  sil                                           th                                      r                   iy                             sil             th                                      r               iy                                      ow                                                                                                                             sil                                                         th                                                  r               iy                                w                                                                        ah                                   n                           sil   
+\normalsize
+
+*ac_33o31a*  sil                                           th                                      r                   iy                             sil             th                                      r               iy                                      ow                                                                                                                             sil                                                         th                                                  r               iy                                w                                                                        ah                                   n                           sil   
 
 33031
 
@@ -188,10 +202,12 @@ Both with or without delta interpret this stream as the same digit string "33031
 
 ## Combinations of monotone and delta training
 
-For extra credit, we also tried delta training for the parameter optimized for Question 1 \ref{sec:mono} (Alternative parameters)
+For extra credit, we also tried delta training for the parameter optimized for Question 1 in Section \ref{sec:mono} (Alternative parameters)
 *20,18,100,1,1 1 2 3 4 5 6 7 8 9 10 13 16 19', normalized, trained on dataset 4*.
 
 The results are reported in following table:
+
+\small
 
 delta     numleaves    totgauss        WER(%)        SER(%)
 ------    -----------  -------------  -----------   --------------
@@ -203,6 +219,7 @@ AFTER          200          800         0.96          2.84
 AFTER          100          1200         0.90          2.75
 AFTER          200          1200       **0.80**        **2.44**
 
+\normalsize
 <!-- 
 Starter parameters:
 
@@ -217,13 +234,26 @@ AFTER          800          1200          8.76          18.16
 AFTER          800          800          7.64          16.7 
 -->
 
-We see none of those training get better numbers than our optimal number (0.79%, 2.41%). 
+We see none of those training get better numbers than our optimal number (0.79%, 2.41%), although it gets very close to our best numbers. 
 Interestingly, (200,1200) works better for alternative parameters, but (100,800) works better for our best parameters.
+
+However, we found that using the same parameter tuned for the whole system, delta training do not necessarily reduce WER. In fact, in dataset 1,2,3 it introduce
+about 50% larger WER, and slightly larger SERs. It only reduces WER on our final full dataset:
+
+
+ BEFORE   DELTA      |   AFTER    DELTA
+-------  ----------    -------   -----------
+  WER(%)    SER(%)      WER(%)    SER(%)
+ 7.38     15.62         11.38     20.47
+ 6.04     13.22         7.10     14.94
+ 1.07     3.28          1.58     4.46
+ 0.95     2.82          0.79     2.41
 
 
 ## Training with energy
 
 We tried training with *energy* (in `mfcc.conf`) on our best parameters, but the WER increases to 
+
 - 1.20% WER, 3.53% SER with mono-training only.
 - 0.90% WER, 2.72% SER with delta training.
 

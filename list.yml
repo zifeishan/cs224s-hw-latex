@@ -21,7 +21,7 @@ hw1:
     Title: "Homework 1"
 hw3:
     Title: "Homework 3"
-    myid: "\\{zifei, tianxin, caohw\\}@stanford.edu"
-    inputAuthors: "Zifei Shan, Tianxin Zhao, Haowen Cao"
+    myid: "\\{tianxin, zifei, caohw\\}@stanford.edu"
+    inputAuthors: "Tianxin Zhao, Zifei Shan, Haowen Cao"
     headerY: ""
     headerX: "CS224S Course Assignment"

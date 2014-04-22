@@ -2,8 +2,8 @@ all : hw3 hw1
 
 hw3 : src/hw3.md list.yml
 	pandoc src/hw3.md -o temp.tex
-	pdflatex -jobname="hw3" "\def\inputAuthors{Zifei Shan, Tianxin Zhao, Haowen Cao} \def\myid{\{zifei, tianxin, caohw\}@stanford.edu} \def\headerX{CS224S Course Assignment} \def\headerY{} \def\Title{Homework 3} \def\bottomspace{13mm} \def\inputParSkip{0.3em} \def\inputLineStretch{1} \def\geometryline{\geometry{margin=1in,columnsep=0.25in,includeheadfoot}} \def\topspace{10mm} \def\pkulogo{} \def\coverpage{} \input{src/template.tex}"
-	pdflatex -jobname="hw3" "\def\inputAuthors{Zifei Shan, Tianxin Zhao, Haowen Cao} \def\myid{\{zifei, tianxin, caohw\}@stanford.edu} \def\headerX{CS224S Course Assignment} \def\headerY{} \def\Title{Homework 3} \def\bottomspace{13mm} \def\inputParSkip{0.3em} \def\inputLineStretch{1} \def\geometryline{\geometry{margin=1in,columnsep=0.25in,includeheadfoot}} \def\topspace{10mm} \def\pkulogo{} \def\coverpage{} \input{src/template.tex}"
+	pdflatex -jobname="hw3" "\def\inputAuthors{Tianxin Zhao, Zifei Shan, Haowen Cao} \def\myid{\{tianxin, zifei, caohw\}@stanford.edu} \def\headerX{CS224S Course Assignment} \def\headerY{} \def\Title{Homework 3} \def\bottomspace{13mm} \def\inputParSkip{0.3em} \def\inputLineStretch{1} \def\geometryline{\geometry{margin=1in,columnsep=0.25in,includeheadfoot}} \def\topspace{10mm} \def\pkulogo{} \def\coverpage{} \input{src/template.tex}"
+	pdflatex -jobname="hw3" "\def\inputAuthors{Tianxin Zhao, Zifei Shan, Haowen Cao} \def\myid{\{tianxin, zifei, caohw\}@stanford.edu} \def\headerX{CS224S Course Assignment} \def\headerY{} \def\Title{Homework 3} \def\bottomspace{13mm} \def\inputParSkip{0.3em} \def\inputLineStretch{1} \def\geometryline{\geometry{margin=1in,columnsep=0.25in,includeheadfoot}} \def\topspace{10mm} \def\pkulogo{} \def\coverpage{} \input{src/template.tex}"
 	pdftk  hw3.pdf output tmp+cover.pdf
 	mv -f tmp+cover.pdf hw3.pdf
 	mv hw3.pdf build/hw3.pdf
